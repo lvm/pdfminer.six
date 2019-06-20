@@ -27,6 +27,8 @@ LITERALS_ASCIIHEX_DECODE = (LIT('ASCIIHexDecode'), LIT('AHx'))
 LITERALS_RUNLENGTH_DECODE = (LIT('RunLengthDecode'), LIT('RL'))
 LITERALS_CCITTFAX_DECODE = (LIT('CCITTFaxDecode'), LIT('CCF'))
 LITERALS_DCT_DECODE = (LIT('DCTDecode'), LIT('DCT'))
+LITERALS_JPX_DECODE = (LIT('JPXDecode'), LIT('JPX'))
+LITERALS_JBIG2_DECODE = (LIT('JBIG2Decode'),)
 
 
 ##  PDF Objects
@@ -96,7 +98,7 @@ def resolve_all(x, default=None):
     if isinstance(x, list):
         x = [resolve_all(v, default=default) for v in x]
     elif isinstance(x, dict):
-        for (k, v) in x.iteritems():
+        for (k, v) in six.iteritems(x):
             x[k] = resolve_all(v, default=default)
     return x
 
@@ -272,8 +274,13 @@ class PDFStream(PDFObject):
             elif f in LITERALS_CCITTFAX_DECODE:
                 data = ccittfaxdecode(data, params)
             elif f in LITERALS_DCT_DECODE:
-                # This is probably a JPG stream - it does not need to be decoded twice.
+                # This is probably a JPG stream -
+                # it does not need to be decoded twice.
                 # Just return the stream to the user.
+                pass
+            elif f in LITERALS_JPX_DECODE:
+                pass
+            elif f in LITERALS_JBIG2_DECODE:
                 pass
             elif f == LITERAL_CRYPT:
                 # not yet..
